@@ -94,7 +94,7 @@ const AdminLayout = () => {
 
       {/* Footer */}
       <footer style={{ padding: '1.5rem', textAlign: 'center', fontSize: '0.85rem', color: '#8c8276', borderTop: '1px solid #ede4d3' }}>
-        Urban Spoon Administration Portal • Sysslan IT Solutions Internship Evaluation System
+        Urban Spoon Administration Portal • 28 George Street, Edinburgh, Scotland
       </footer>
     </div>
   );

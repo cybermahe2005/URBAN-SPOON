@@ -167,8 +167,8 @@ const Footer = () => {
         {/* Footer Bottom */}
         <div className="footer-bottom">
           <p>© {new Date().getFullYear()} Urban Spoon Restaurant. All rights reserved.</p>
-          <p className="internship-tag">
-            Sysslan IT Solutions Internship Project | Built with MERN Stack
+          <p className="footer-tagline">
+            Fine Dining &amp; Contemporary Bistro • Edinburgh, Scotland
           </p>
         </div>
       </div>

@@ -1,7 +1,7 @@
 {
   "info": {
     "_postman_id": "7f8b9a10-2345-4cde-8901-urbanspoon2026",
-    "name": "Urban Spoon REST API - Sysslan IT Solutions",
+    "name": "Urban Spoon REST API",
     "description": "Production REST API collection for Urban Spoon Restaurant table inquiry management and administrator authentication.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },

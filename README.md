@@ -1,7 +1,6 @@
 # Urban Spoon – Contemporary Fine Dining Restaurant Web Application
 
-> **Sysslan IT Solutions – Full-Stack MERN Development Internship Project**  
-> *Developed by Senior MERN Stack Architect & Technical Lead*
+> **Full-Stack MERN Application • 28 George Street, Edinburgh, Scotland**
 
 [![MERN Stack](https://img.shields.io/badge/Stack-MERN-green.svg)](https://reactjs.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-v24.x-blue.svg)](https://nodejs.org/)
@@ -20,13 +19,13 @@ Additionally, Urban Spoon features a protected **Administrator Management Dashbo
 
 ---
 
-## 2. Key Features Across All Internship Levels
+## 2. Key Features & Implementation Overview
 
 ### Level 1 – Basic Website Layout & Branding
 - **Homepage:** High-end aesthetic with text and SVG branding, warm color palette (warm orange `#ea580c`, cream `#fdfaf4`, dark brown `#24140c`, and crisp white), welcoming introduction, and statistical proof points.
 - **Navigation Bar:** Fixed, responsive navbar with blur backdrop filter, active link indicators, smooth navigation, and a slide-in mobile navigation drawer.
 - **Hero Section:** Full-bleed background imagery, bold typography, tagline *"Artisanal Flavors, Unforgettable Dining Moments"*, and dual call-to-action buttons (*Explore Menu* and *Reserve Table*).
-- **Footer:** Brand identity, address placeholder, operating hours breakdown, direct phone/email channels, social media links (Instagram, Facebook, Twitter, TripAdvisor), and copyright/internship attribution.
+- **Footer:** Brand identity, Edinburgh address, operating hours breakdown, direct phone/email channels, social media links (Instagram, Facebook, Twitter, TripAdvisor), and copyright notice.
 
 ### Level 2 – Menu & Restaurant Information
 - **Categorized Menu Display:** Starters, Main Course, Desserts, and Beverages.
@@ -390,15 +389,15 @@ Import `urban_spoon_postman_collection.json` directly into Postman:
 
 ---
 
-## 11. Internship Task Verification Checklist
+## 11. Feature Verification Checklist
 
 - [x] **Level 1:** Homepage with text/SVG branding, sticky navbar, mobile drawer, hero section, and comprehensive footer.
 - [x] **Level 2:** Menu page with Starters, Main Course, Desserts, Beverages; About page with history, cuisine, specialties, and why choose us.
-- [x] **Level 3:** Contact page with address, phone, email placeholders, opening hours, and stylized location map placeholder.
+- [x] **Level 3:** Contact page with Edinburgh address, UK phone numbers, email details, opening hours, and stylized location map.
 - [x] **Level 4:** Node.js + Express backend, Mongoose `TableInquiry` model, REST APIs, client-side & server-side validation, and instant confirmation screen.
 - [x] **Level 5:** Functional category filtering, food name search, price sorting, admin JWT authentication, KPI stat cards, inquiry management table, status updater, customer details modal, and pagination.
 - [x] **Additional:** Customer testimonials, ambiance gallery, 404 error page, animated toast system, seed script, Postman collection, and 18 passing integration tests.
 
 ---
 
-*Urban Spoon Restaurant Web Application • Created for Sysslan IT Solutions Internship Evaluation.*
+*Urban Spoon Contemporary Dining • Edinburgh, Scotland, UK.*
