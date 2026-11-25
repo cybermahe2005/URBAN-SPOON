@@ -64,7 +64,7 @@ export const useToast = () => {
 const styles = {
   toastContainer: {
     position: 'fixed',
-    top: '24px',
+    top: '88px',
     right: '24px',
     zIndex: 9999,
     display: 'flex',

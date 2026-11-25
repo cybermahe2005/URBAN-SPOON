@@ -102,7 +102,7 @@ const Menu = () => {
                 style={{
                   position: 'relative',
                   flexGrow: 1,
-                  minWidth: '260px',
+                  minWidth: '200px',
                 }}
               >
                 <FiSearch
@@ -143,8 +143,8 @@ const Menu = () => {
 
               {/* Sort Selector */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                <FiSliders style={{ color: 'var(--color-primary)' }} />
-                <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--color-dark-brown)' }}>
+                <FiSliders style={{ color: 'var(--color-primary)', flexShrink: 0 }} />
+                <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--color-dark-brown)', whiteSpace: 'nowrap' }}>
                   Sort by:
                 </span>
                 <select

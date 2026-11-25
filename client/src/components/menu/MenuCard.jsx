@@ -12,7 +12,6 @@ const MenuCard = ({ item }) => {
           src={item.image}
           alt={item.name}
           className="menu-card-img"
-          loading="lazy"
           onError={(e) => {
             if (e.currentTarget.src !== FALLBACK_DISH_IMAGE) {
               e.currentTarget.src = FALLBACK_DISH_IMAGE;
