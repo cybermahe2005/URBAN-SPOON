@@ -1,0 +1,62 @@
+/* Responsive Styles for Urban Spoon */
+
+@media (max-width: 1024px) {
+  .section {
+    padding: 4rem 0;
+  }
+  .section-title {
+    font-size: 2.25rem;
+  }
+  .page-hero-title {
+    font-size: 2.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --header-height: 70px;
+  }
+
+  .section {
+    padding: 3.25rem 0;
+  }
+
+  .page-hero {
+    padding: 4rem 0 3rem;
+  }
+
+  .page-hero-title {
+    font-size: 2.15rem;
+  }
+
+  .page-hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.95rem;
+  }
+
+  .section-description {
+    font-size: 1rem;
+  }
+
+  .btn-lg {
+    padding: 0.85rem 1.75rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

@@ -1,0 +1,235 @@
+{
+  "info": {
+    "_postman_id": "7f8b9a10-2345-4cde-8901-urbanspoon2026",
+    "name": "Urban Spoon REST API - Sysslan IT Solutions",
+    "description": "Production REST API collection for Urban Spoon Restaurant table inquiry management and administrator authentication.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sampleInquiryId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        },
+        "description": "Check if Urban Spoon API server is online and healthy."
+      }
+    },
+    {
+      "name": "1. Public - Submit Table Inquiry",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.success && jsonData.data && jsonData.data._id) {",
+              "    pm.collectionVariables.set('sampleInquiryId', jsonData.data._id);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customerName\": \"Eleanor Vance\",\n  \"phoneNumber\": \"+44 131 496 2345\",\n  \"bookingDate\": \"2026-11-28T19:30:00.000Z\",\n  \"numberOfGuests\": 4,\n  \"specialRequests\": \"Window booth requested with vegetarian appetizer pairing.\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/inquiries",
+          "host": ["{{baseUrl}}"],
+          "path": ["inquiries"]
+        },
+        "description": "Allows public customers to submit a table booking inquiry."
+      }
+    },
+    {
+      "name": "2. Admin - Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.success && jsonData.data && jsonData.data.token) {",
+              "    pm.collectionVariables.set('adminToken', jsonData.data.token);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@urbanspoon.com\",\n  \"password\": \"admin123\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "login"]
+        },
+        "description": "Authenticate admin user and obtain JWT bearer token."
+      }
+    },
+    {
+      "name": "3. Admin - Get Current Profile",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/profile",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "profile"]
+        },
+        "description": "Verify active administrator session."
+      }
+    },
+    {
+      "name": "4. Admin - Get All Inquiries (with Pagination & Filters)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/inquiries?status=All&page=1&limit=10",
+          "host": ["{{baseUrl}}"],
+          "path": ["inquiries"],
+          "query": [
+            { "key": "status", "value": "All" },
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "10" },
+            { "key": "search", "value": "", "disabled": true },
+            { "key": "date", "value": "", "disabled": true }
+          ]
+        },
+        "description": "Retrieve table inquiries in descending order with summary statistics."
+      }
+    },
+    {
+      "name": "5. Admin - Get Inquiry Stats Summary",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/inquiries/stats/summary",
+          "host": ["{{baseUrl}}"],
+          "path": ["inquiries", "stats", "summary"]
+        },
+        "description": "Get total, pending, confirmed, and cancelled inquiry counts for dashboard cards."
+      }
+    },
+    {
+      "name": "6. Admin - Get Inquiry By ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/inquiries/{{sampleInquiryId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["inquiries", "{{sampleInquiryId}}"]
+        },
+        "description": "Retrieve details of a single inquiry by its MongoDB ObjectId."
+      }
+    },
+    {
+      "name": "7. Admin - Update Inquiry Status",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Confirmed\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/inquiries/{{sampleInquiryId}}/status",
+          "host": ["{{baseUrl}}"],
+          "path": ["inquiries", "{{sampleInquiryId}}", "status"]
+        },
+        "description": "Update status to Confirmed, Pending, or Cancelled."
+      }
+    },
+    {
+      "name": "8. Admin - Delete Inquiry",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/inquiries/{{sampleInquiryId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["inquiries", "{{sampleInquiryId}}"]
+        },
+        "description": "Delete inquiry record from MongoDB."
+      }
+    }
+  ]
+}
