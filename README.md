@@ -11,13 +11,14 @@
 
 ---
 
-## Live Deployment
+## Live Deployment & Repository
 
-| Service | Live URL | Hosting |
+| Service | Link | Platform |
 |---|---|---|
 | **Live Website (Frontend)** | [https://urban-spoon-five.vercel.app/](https://urban-spoon-five.vercel.app/) | Vercel |
 | **Admin Portal** | [https://urban-spoon-five.vercel.app/admin/login](https://urban-spoon-five.vercel.app/admin/login) | Vercel |
 | **Backend REST API** | [https://urban-spoon-api.onrender.com/api/health](https://urban-spoon-api.onrender.com/api/health) | Render + MongoDB Atlas |
+| **GitHub Repository** | [https://github.com/cybermahe2005/URBAN-SPOON.git](https://github.com/cybermahe2005/URBAN-SPOON.git) | GitHub |
 
 ---
 
@@ -185,9 +186,10 @@ urban-spoon/
 
 ---
 
-### Step 1: Clone or Navigate to Project
+### Step 1: Clone the Repository
 ```bash
-cd "e:\INTERNSHIP PROJECT\urban-spoon"
+git clone https://github.com/cybermahe2005/URBAN-SPOON.git
+cd URBAN-SPOON
 ```
 
 ---
