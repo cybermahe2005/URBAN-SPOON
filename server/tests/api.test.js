@@ -136,6 +136,28 @@ const runTests = async () => {
     assert(patchRes.status === 200, 'PATCH /api/inquiries/:id/status returns 200 OK');
     assert(patchRes.data.data.status === 'Confirmed', 'Status successfully changed to Confirmed');
 
+    // TEST 7B: Customer Public Status Check via Reference ID + Phone Number
+    console.log('\nTest Suite 6B: Customer Public Status Lookup');
+    const shortRef = `#${createdId.slice(-8).toUpperCase()}`;
+    const checkStatusRes = await request('/inquiries/check-status', {
+      method: 'POST',
+      body: JSON.stringify({
+        referenceId: shortRef,
+        phoneNumber: '+1 555-789-0123',
+      }),
+    });
+    assert(checkStatusRes.status === 200, 'POST /api/inquiries/check-status returns 200 OK for valid Reference ID & phone');
+    assert(checkStatusRes.data.data.status === 'Confirmed', 'Status lookup reflects admin-updated Confirmed status');
+
+    const checkStatusMismatch = await request('/inquiries/check-status', {
+      method: 'POST',
+      body: JSON.stringify({
+        referenceId: shortRef,
+        phoneNumber: '+44 999 000 1111',
+      }),
+    });
+    assert(checkStatusMismatch.status === 404, 'POST /api/inquiries/check-status rejects mismatched phone number with 404');
+
     // TEST 8: Invalid ObjectId Handling
     console.log('\nTest Suite 7: ObjectId Validation');
     const invalidIdRes = await request('/inquiries/not-a-valid-id', {

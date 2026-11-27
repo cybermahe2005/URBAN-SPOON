@@ -73,6 +73,28 @@
       }
     },
     {
+      "name": "1B. Public - Check Table Inquiry Status",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"referenceId\": \"{{sampleInquiryId}}\",\n  \"phoneNumber\": \"+44 131 496 2345\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/inquiries/check-status",
+          "host": ["{{baseUrl}}"],
+          "path": ["inquiries", "check-status"]
+        },
+        "description": "Allows customers to check their live table inquiry status using their Reference ID (or short #XXXXXXXX code) and submitted phone number."
+      }
+    },
+    {
       "name": "2. Admin - Login",
       "event": [
         {

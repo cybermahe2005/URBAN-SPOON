@@ -7,6 +7,15 @@ export const inquiryService = {
     return response.data;
   },
 
+  // Public: Check inquiry status by Reference ID and Phone Number
+  checkStatus: async (referenceId, phoneNumber) => {
+    const response = await api.post('/inquiries/check-status', {
+      referenceId,
+      phoneNumber,
+    });
+    return response.data;
+  },
+
   // Admin: Get all inquiries with optional status, search, date filter, pagination
   getInquiries: async (params = {}) => {
     const response = await api.get('/inquiries', { params });

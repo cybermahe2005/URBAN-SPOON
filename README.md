@@ -12,7 +12,6 @@
 ---
 
 ## 1. Project Overview
-
 **Urban Spoon** is a production-quality, responsive full-stack MERN application crafted for an upscale restaurant and lounge. It enables prospective diners to explore categorized menus with dynamic pricing and culinary tags, learn about the restaurant's culinary philosophy and decade-long heritage, review detailed contact coordinates and operating hours, and submit structured **Table Booking Inquiries** with instant summary confirmation.
 
 Additionally, Urban Spoon features a protected **Administrator Management Dashboard** powered by JSON Web Token (JWT) authentication, allowing restaurant personnel to monitor booking statistics in real-time, filter inquiries by status or booking date, search customer records, update inquiry statuses, and delete expired inquiries.
@@ -279,6 +278,7 @@ All endpoints are prefixed with `/api`.
 |---|---|---|---|
 | `GET` | `/health` | Public | Server uptime and health verification |
 | `POST` | `/inquiries` | Public | Submit new customer table inquiry |
+| `POST` | `/inquiries/check-status` | Public | Check live inquiry status via Reference ID and phone number |
 | `POST` | `/auth/login` | Public | Admin login, returns JWT token |
 | `GET` | `/auth/profile` | Protected (Admin) | Retrieve authenticated admin profile |
 | `GET` | `/inquiries` | Protected (Admin) | List inquiries (supports status, search, date, pagination) |

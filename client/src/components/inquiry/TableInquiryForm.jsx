@@ -7,13 +7,14 @@ import {
   FiMessageSquare,
   FiAlertCircle,
   FiCheckCircle,
+  FiSearch,
 } from 'react-icons/fi';
 import { validateInquiryForm } from '../../utils/validation';
 import { inquiryService } from '../../services/inquiryService';
 import { useToast } from '../../context/ToastContext';
 import '../../styles/inquiry.css';
 
-const TableInquiryForm = ({ onSuccess }) => {
+const TableInquiryForm = ({ onSuccess, onOpenStatusCheck }) => {
   const { showToast } = useToast();
 
   const [formData, setFormData] = useState({
@@ -279,6 +280,25 @@ const TableInquiryForm = ({ onSuccess }) => {
             )}
           </button>
         </div>
+
+        {/* Check Existing Table Inquiry Status Button */}
+        {onOpenStatusCheck && (
+          <div className="inquiry-secondary-action">
+            <span className="inquiry-secondary-hint">
+              Already submitted a table inquiry? Check your confirmation status anytime.
+            </span>
+            <button
+              type="button"
+              onClick={onOpenStatusCheck}
+              className="btn btn-outline btn-lg"
+              style={{ width: '100%', gap: '0.65rem' }}
+              disabled={submitting}
+            >
+              <FiSearch size={19} />
+              <span>Check Table Inquiry Status</span>
+            </button>
+          </div>
+        )}
       </form>
 
       <style>{`

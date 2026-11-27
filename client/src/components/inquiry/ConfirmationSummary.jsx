@@ -11,12 +11,15 @@ import {
   FiPlusCircle,
   FiBookOpen,
   FiHome,
+  FiSearch,
 } from 'react-icons/fi';
 import { formatDate } from '../../utils/formatDate';
 import '../../styles/inquiry.css';
 
-const ConfirmationSummary = ({ inquiry, onReset }) => {
+const ConfirmationSummary = ({ inquiry, onReset, onCheckStatus }) => {
   if (!inquiry) return null;
+
+  const referenceCode = inquiry._id ? `#${inquiry._id.slice(-8).toUpperCase()}` : 'REC-PENDING';
 
   return (
     <div className="confirmation-container" role="region" aria-label="Booking Confirmation Summary">
@@ -115,9 +118,9 @@ const ConfirmationSummary = ({ inquiry, onReset }) => {
         }}
       >
         <strong>Please Note:</strong> This is a table booking inquiry, not a confirmed reservation.
-        Our hospitality team will review seating availability for your requested party size and
-        contact you via phone (<strong>{inquiry.phoneNumber}</strong>) shortly to finalize your
-        table.
+        Save your Inquiry Reference ID (<strong>{referenceCode}</strong>) to track your live
+        confirmation status once our hospitality team updates your request, or await our call on{' '}
+        <strong>{inquiry.phoneNumber}</strong>.
       </div>
 
       {/* Action Buttons */}
@@ -129,7 +132,14 @@ const ConfirmationSummary = ({ inquiry, onReset }) => {
           flexWrap: 'wrap',
         }}
       >
-        <button onClick={onReset} className="btn btn-primary">
+        {onCheckStatus && (
+          <button onClick={() => onCheckStatus(inquiry)} className="btn btn-primary">
+            <FiSearch />
+            <span>Check Inquiry Status</span>
+          </button>
+        )}
+
+        <button onClick={onReset} className={onCheckStatus ? 'btn btn-outline' : 'btn btn-primary'}>
           <FiPlusCircle />
           <span>Submit Another Inquiry</span>
         </button>

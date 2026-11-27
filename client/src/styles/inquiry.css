@@ -165,6 +165,73 @@
   max-width: 60%;
 }
 
+/* Status Check Divider & Result Banners */
+.inquiry-secondary-action {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--color-cream-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.inquiry-secondary-hint {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.status-result-wrapper {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-cream-border);
+  animation: fadeInUp 0.25s ease-out;
+}
+
+.status-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+}
+
+.status-banner-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.status-banner-pending {
+  background-color: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+.status-banner-confirmed {
+  background-color: #dcfce7;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.status-banner-cancelled {
+  background-color: #fee2e2;
+  border-color: #fca5a5;
+  color: #991b1b;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 768px) {
   .inquiry-card {
     padding: 2rem 1.5rem;

@@ -218,6 +218,95 @@ const updateInquiryStatus = async (req, res, next) => {
   }
 };
 
+// @desc    Check table inquiry status by Reference ID and Phone Number
+// @route   POST /api/inquiries/check-status
+// @access  Public
+const checkInquiryStatus = async (req, res, next) => {
+  try {
+    const { referenceId, phoneNumber } = req.body;
+
+    const cleanRef = String(referenceId || '')
+      .trim()
+      .replace(/^#/, '')
+      .toLowerCase();
+    const inputDigits = String(phoneNumber || '').replace(/\D/g, '');
+
+    if (!cleanRef || !/^[0-9a-f]{6,24}$/.test(cleanRef)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please enter a valid Inquiry Reference ID (e.g. #98E994AB or full ID).',
+      });
+    }
+
+    if (inputDigits.length < 7) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please enter the valid mobile/phone number used during booking.',
+      });
+    }
+
+    const phonesMatch = (storedPhone, providedDigits) => {
+      const storedDigits = String(storedPhone || '').replace(/\D/g, '');
+      if (!storedDigits || !providedDigits) return false;
+      if (storedDigits === providedDigits) return true;
+      // Allow country-code vs leading-zero variations (e.g. +44 7911... vs 07911...)
+      const minLen = Math.min(storedDigits.length, providedDigits.length);
+      if (minLen >= 9) {
+        return storedDigits.slice(-9) === providedDigits.slice(-9);
+      }
+      return storedDigits.slice(-7) === providedDigits.slice(-7) && Math.abs(storedDigits.length - providedDigits.length) <= 3;
+    };
+
+    let matchedInquiry = null;
+
+    if (cleanRef.length === 24 && mongoose.Types.ObjectId.isValid(cleanRef)) {
+      const candidate = await TableInquiry.findById(cleanRef);
+      if (candidate && phonesMatch(candidate.phoneNumber, inputDigits)) {
+        matchedInquiry = candidate;
+      }
+    } else {
+      // Match phone numbers sharing the last 6 digits first, then verify exact reference suffix & full phone match
+      const last6 = inputDigits.slice(-6);
+      const digitPattern = last6.split('').join('\\D*');
+      const candidates = await TableInquiry.find({
+        phoneNumber: { $regex: digitPattern },
+      }).sort({ createdAt: -1 });
+
+      matchedInquiry = candidates.find(
+        (doc) =>
+          doc._id.toString().toLowerCase().endsWith(cleanRef) &&
+          phonesMatch(doc.phoneNumber, inputDigits)
+      );
+    }
+
+    if (!matchedInquiry) {
+      return res.status(404).json({
+        success: false,
+        message:
+          'No table inquiry found matching that Reference ID and Phone Number. Please check your details and try again.',
+      });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        _id: matchedInquiry._id,
+        referenceCode: `#${matchedInquiry._id.toString().slice(-8).toUpperCase()}`,
+        customerName: matchedInquiry.customerName,
+        phoneNumber: matchedInquiry.phoneNumber,
+        bookingDate: matchedInquiry.bookingDate,
+        numberOfGuests: matchedInquiry.numberOfGuests,
+        specialRequests: matchedInquiry.specialRequests,
+        status: matchedInquiry.status,
+        createdAt: matchedInquiry.createdAt,
+        updatedAt: matchedInquiry.updatedAt,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Delete inquiry
 // @route   DELETE /api/inquiries/:id
 // @access  Private (Admin)
@@ -255,6 +344,7 @@ const deleteInquiry = async (req, res, next) => {
 
 module.exports = {
   createInquiry,
+  checkInquiryStatus,
   getAllInquiries,
   getInquiryStats,
   getInquiryById,

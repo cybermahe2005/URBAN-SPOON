@@ -1,19 +1,41 @@
 import React, { useState } from 'react';
 import TableInquiryForm from '../components/inquiry/TableInquiryForm';
 import ConfirmationSummary from '../components/inquiry/ConfirmationSummary';
-import { FiClock, FiPhone, FiInfo, FiCheck } from 'react-icons/fi';
+import CheckInquiryStatus from '../components/inquiry/CheckInquiryStatus';
+import { FiClock, FiPhone, FiCheck } from 'react-icons/fi';
 import '../styles/inquiry.css';
 
 const ReserveTable = () => {
+  const [activeView, setActiveView] = useState('form'); // 'form' | 'confirmation' | 'status-check'
   const [submittedInquiry, setSubmittedInquiry] = useState(null);
+  const [statusPrefill, setStatusPrefill] = useState(null);
 
   const handleSuccess = (inquiryData) => {
     setSubmittedInquiry(inquiryData);
+    setActiveView('confirmation');
     window.scrollTo({ top: 120, behavior: 'smooth' });
   };
 
   const handleReset = () => {
     setSubmittedInquiry(null);
+    setStatusPrefill(null);
+    setActiveView('form');
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+  };
+
+  const handleOpenStatusCheck = () => {
+    setStatusPrefill(null);
+    setActiveView('status-check');
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+  };
+
+  const handleCheckSubmittedStatus = (inquiry) => {
+    setStatusPrefill({
+      referenceId: inquiry?._id ? `#${inquiry._id.slice(-8).toUpperCase()}` : '',
+      phoneNumber: inquiry?.phoneNumber || '',
+    });
+    setActiveView('status-check');
+    window.scrollTo({ top: 120, behavior: 'smooth' });
   };
 
   return (
@@ -26,18 +48,27 @@ const ReserveTable = () => {
           </span>
           <h1 className="page-hero-title">Table Booking Inquiry</h1>
           <p className="page-hero-subtitle">
-            Submit your table preferences below. Our dining host team will reach out promptly to
-            confirm availability and personalize your experience.
+            Submit your table preferences below or check the status of an existing inquiry. Our
+            dining host team will reach out promptly to confirm availability.
           </p>
         </div>
       </section>
 
-      {/* 2. MAIN FORM OR CONFIRMATION SCREEN */}
+      {/* 2. MAIN FORM, CONFIRMATION, OR STATUS CHECK */}
       <section className="section" style={{ paddingTop: '3.5rem' }}>
         <div className="container">
           <div className="inquiry-wrapper">
-            {submittedInquiry ? (
-              <ConfirmationSummary inquiry={submittedInquiry} onReset={handleReset} />
+            {activeView === 'confirmation' && submittedInquiry ? (
+              <ConfirmationSummary
+                inquiry={submittedInquiry}
+                onReset={handleReset}
+                onCheckStatus={handleCheckSubmittedStatus}
+              />
+            ) : activeView === 'status-check' ? (
+              <CheckInquiryStatus
+                initialValues={statusPrefill}
+                onBackToForm={handleReset}
+              />
             ) : (
               <>
                 <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
@@ -49,7 +80,10 @@ const ReserveTable = () => {
                   </p>
                 </div>
 
-                <TableInquiryForm onSuccess={handleSuccess} />
+                <TableInquiryForm
+                  onSuccess={handleSuccess}
+                  onOpenStatusCheck={handleOpenStatusCheck}
+                />
 
                 {/* Additional Guidance */}
                 <div className="guidance-grid">

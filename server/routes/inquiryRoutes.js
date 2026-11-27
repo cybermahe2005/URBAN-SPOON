@@ -3,6 +3,7 @@ const router = express.Router();
 const { body } = require('express-validator');
 const {
   createInquiry,
+  checkInquiryStatus,
   getAllInquiries,
   getInquiryStats,
   getInquiryById,
@@ -45,6 +46,23 @@ const inquiryValidationRules = [
 
 // Public Route: Submit Inquiry
 router.post('/', inquiryValidationRules, validate, createInquiry);
+
+// Public Route: Check Inquiry Status via Reference ID & Phone Number
+router.post(
+  '/check-status',
+  [
+    body('referenceId')
+      .trim()
+      .notEmpty()
+      .withMessage('Inquiry Reference ID is required'),
+    body('phoneNumber')
+      .trim()
+      .notEmpty()
+      .withMessage('Phone number is required'),
+    validate,
+  ],
+  checkInquiryStatus
+);
 
 // Protected Admin Routes
 router.get('/', protect, getAllInquiries);
