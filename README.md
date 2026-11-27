@@ -11,6 +11,16 @@
 
 ---
 
+## Live Deployment
+
+| Service | Live URL | Hosting |
+|---|---|---|
+| **Live Website (Frontend)** | [https://urban-spoon-five.vercel.app/](https://urban-spoon-five.vercel.app/) | Vercel |
+| **Admin Portal** | [https://urban-spoon-five.vercel.app/admin/login](https://urban-spoon-five.vercel.app/admin/login) | Vercel |
+| **Backend REST API** | [https://urban-spoon-api.onrender.com/api/health](https://urban-spoon-api.onrender.com/api/health) | Render + MongoDB Atlas |
+
+---
+
 ## 1. Project Overview
 **Urban Spoon** is a production-quality, responsive full-stack MERN application crafted for an upscale restaurant and lounge. It enables prospective diners to explore categorized menus with dynamic pricing and culinary tags, learn about the restaurant's culinary philosophy and decade-long heritage, review detailed contact coordinates and operating hours, and submit structured **Table Booking Inquiries** with instant summary confirmation.
 
@@ -398,8 +408,8 @@ Import `urban_spoon_postman_collection.json` directly into Postman:
    - `MONGO_URI=mongodb+srv://<username>:<password>@<cluster-url>/urban_spoon?retryWrites=true&w=majority&appName=UrbanSpoon`
    - `JWT_SECRET=<your_long_random_secret_key>`
    - `JWT_EXPIRE=7d`
-   - `CLIENT_URL=https://your-frontend-domain.vercel.app`
-4. Verify deployment by visiting `https://your-backend.onrender.com/api/health` — it should return `"status": "healthy"` and `"database": { "state": "connected" }`.
+   - `CLIENT_URL=https://urban-spoon-five.vercel.app`
+4. Verify deployment by visiting `https://urban-spoon-api.onrender.com/api/health` — it should return `"status": "healthy"` and `"database": { "state": "connected" }`.
 
 ### Step C: Deploy Frontend (Vercel / Netlify)
 1. On [Vercel](https://vercel.com/) or [Netlify](https://www.netlify.com/), import the `URBAN-SPOON` GitHub repository:
@@ -408,8 +418,8 @@ Import `urban_spoon_postman_collection.json` directly into Postman:
    - **Output Directory:** `dist`
    - *(SPA routing rewrites are already handled by `client/vercel.json` and `client/public/_redirects`.)*
 2. Add the environment variable:
-   - `VITE_API_URL=https://your-backend.onrender.com/api`
-3. Copy your deployed frontend URL (e.g., `https://urban-spoon.vercel.app`) back into the backend's `CLIENT_URL` environment variable so CORS allows live requests.
+   - `VITE_API_URL=https://urban-spoon-api.onrender.com/api`
+3. Copy your deployed frontend URL (`https://urban-spoon-five.vercel.app`) back into the backend's `CLIENT_URL` environment variable so CORS allows live requests.
 
 ---
 
