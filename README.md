@@ -368,24 +368,48 @@ Import `urban_spoon_postman_collection.json` directly into Postman:
 
 ---
 
-## 10. Deployment Instructions
+## 10. MongoDB Atlas Setup & Production Deployment
 
-### Frontend (Vercel / Netlify)
-1. Push the `client` directory to your GitHub repository.
-2. In Vercel or Netlify, select the repository and set the root directory to `client`.
-3. Set build command: `npm run build` and publish directory: `dist`.
-4. Add environment variable: `VITE_API_URL=https://your-backend-api-domain.com/api`.
+### Step A: Configure MongoDB Atlas (Cloud Database)
+1. Log in to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and create a free **M0 Cluster**.
+2. Go to **Database Access** -> **Add New Database User** (Password authentication), and note the username and password. *(If your password has special characters like `@`, `#`, `:`, URL-encode them.)*
+3. Go to **Network Access** -> **Add IP Address** -> select **Allow Access from Anywhere (`0.0.0.0/0`)** so cloud hosting servers (Render/Railway) can connect.
+4. Go to **Database** -> **Connect** -> **Drivers** and copy your SRV connection string, adding `/urban_spoon` before the `?`:
+   ```env
+   mongodb+srv://<username>:<password>@<cluster-url>/urban_spoon?retryWrites=true&w=majority&appName=UrbanSpoon
+   ```
+5. To test Atlas locally or seed initial admin/sample inquiries directly into Atlas, paste your Atlas URI into `server/.env` as `MONGO_URI=...` and run:
+   ```bash
+   cd server
+   npm run seed
+   ```
+   *(Note: `server/server.js` also auto-creates the default admin `admin@urbanspoon.com` / `admin123` on first startup if the `admins` collection is empty.)*
 
-### Backend (Render / Railway)
-1. Push the `server` directory to GitHub.
-2. Create a new Web Service on Render / Railway pointing to `server`.
-3. Set start command: `npm start`.
-4. Add environment variables:
-   - `PORT=5000`
-   - `MONGO_URI=mongodb+srv://...`
-   - `JWT_SECRET=your_production_secret_key`
-   - `CLIENT_URL=https://your-frontend-domain.vercel.app`
+### Step B: Deploy Backend (Render / Railway)
+1. Push your repository to GitHub (the included `render.yaml` and `server/Procfile` are pre-configured).
+2. On [Render](https://render.com/) (or Railway), create a **New Web Service** connected to your `URBAN-SPOON` GitHub repository:
+   - **Root Directory:** `server`
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+   - **Health Check Path:** `/api/health`
+3. Add the following **Environment Variables**:
    - `NODE_ENV=production`
+   - `PORT=5000`
+   - `MONGO_URI=mongodb+srv://<username>:<password>@<cluster-url>/urban_spoon?retryWrites=true&w=majority&appName=UrbanSpoon`
+   - `JWT_SECRET=<your_long_random_secret_key>`
+   - `JWT_EXPIRE=7d`
+   - `CLIENT_URL=https://your-frontend-domain.vercel.app`
+4. Verify deployment by visiting `https://your-backend.onrender.com/api/health` — it should return `"status": "healthy"` and `"database": { "state": "connected" }`.
+
+### Step C: Deploy Frontend (Vercel / Netlify)
+1. On [Vercel](https://vercel.com/) or [Netlify](https://www.netlify.com/), import the `URBAN-SPOON` GitHub repository:
+   - **Root Directory:** `client`
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+   - *(SPA routing rewrites are already handled by `client/vercel.json` and `client/public/_redirects`.)*
+2. Add the environment variable:
+   - `VITE_API_URL=https://your-backend.onrender.com/api`
+3. Copy your deployed frontend URL (e.g., `https://urban-spoon.vercel.app`) back into the backend's `CLIENT_URL` environment variable so CORS allows live requests.
 
 ---
 

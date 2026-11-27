@@ -3,6 +3,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
 const { connectDB } = require('./config/db');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 const Admin = require('./models/Admin');
@@ -14,43 +15,72 @@ const inquiryRoutes = require('./routes/inquiryRoutes');
 
 const app = express();
 
+// Trust reverse proxy headers when deployed behind Render, Railway, or Vercel
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Dynamic CORS configuration
+// Dynamic CORS configuration (supports comma-separated CLIENT_URLs and normalizes trailing slashes)
+const envOrigins = (process.env.CLIENT_URL || '')
+  .split(',')
+  .map((url) => url.trim().replace(/\/$/, ''))
+  .filter(Boolean);
+
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   'http://127.0.0.1:5173',
-  process.env.CLIENT_URL,
-].filter(Boolean);
+  'https://urban-spoon-five.vercel.app',
+  ...envOrigins,
+];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps, curl, Postman)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
-        return callback(null, true);
-      }
-      return callback(new Error('CORS policy: Not allowed by CORS'));
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  })
-);
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+    const normalizedOrigin = origin.replace(/\/$/, '');
+    const isVercelPreview = /^https:\/\/urban-spoon[a-z0-9-]*\.vercel\.app$/.test(normalizedOrigin);
+
+    if (
+      allowedOrigins.includes(normalizedOrigin) ||
+      isVercelPreview ||
+      process.env.NODE_ENV !== 'production'
+    ) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS policy: Origin '${origin}' is not allowed by CORS`));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 if (process.env.NODE_ENV !== 'test') {
   app.use(morgan('dev'));
 }
 
-// Health check endpoint
+// Health check endpoint (includes database status without exposing credentials)
 app.get('/api/health', (req, res) => {
+  const dbStateMap = {
+    0: 'disconnected',
+    1: 'connected',
+    2: 'connecting',
+    3: 'disconnecting',
+  };
   res.json({
     status: 'healthy',
     service: 'Urban Spoon REST API',
+    environment: process.env.NODE_ENV || 'development',
+    database: {
+      state: dbStateMap[mongoose.connection.readyState] || 'unknown',
+      name: mongoose.connection.name || null,
+    },
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
   });
